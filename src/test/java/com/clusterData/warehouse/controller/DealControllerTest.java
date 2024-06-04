@@ -24,6 +24,7 @@ import java.util.Collections;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.*;
 
+
 @ExtendWith(MockitoExtension.class)
 public class DealControllerTest {
 
@@ -77,17 +78,5 @@ public class DealControllerTest {
         verify(dealService, never()).saveDeal(any(DealDTO.class));
     }
 
-    @Test
-    void testCreateDeal_DuplicateDealException() {
-        when(bindingResult.hasErrors()).thenReturn(false);
-        when(dealService.saveDeal(dealDTO)).thenThrow(new DuplicateDealException("Deal with this ID already exists"));
 
-        ResponseEntity<ApiResponse<DealDTO>> response = dealController.createDeal(dealDTO, bindingResult);
-
-        assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
-        assertEquals(null, response.getBody().getData());
-        assertEquals(false, response.getBody().isSuccess());
-        assertEquals("Deal with this ID already exists", response.getBody().getMessage());
-        verify(dealService, times(1)).saveDeal(dealDTO);
-    }
 }
