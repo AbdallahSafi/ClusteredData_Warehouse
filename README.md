@@ -114,7 +114,80 @@ http://localhost:8080
 ```
 
 
-### 6.Unit Testing
+### 6.Using the Makefile
+If you want to streamline running the application, you can use a Makefile.
+
+## Makefile
+The Makefile provides commands to build, run, stop, clean, and test the application.
+
+```
+# Define the default goal
+.DEFAULT_GOAL := help
+
+# Variables
+DOCKER_COMPOSE = docker-compose
+MVN = ./mvnw
+
+# Check the operating system
+ifeq ($(OS),Windows_NT)
+    MVN = mvnw.cmd
+endif
+
+# Targets
+help: ## Display this help message
+	@echo "Usage: make [target]"
+	@echo
+	@echo "Targets:"
+	@awk 'BEGIN {FS = ":.*##"; printf "  %-20s %s\n", "Target", "Description"; printf "  %-20s %s\n", "------", "-----------";} /^[a-zA-Z_-]+:.*?##/ { printf "  %-20s %s\n", $$1, $$2 }' $(MAKEFILE_LIST)
+
+build: ## Build the application using Maven
+	$(MVN) clean package
+
+run: ## Build and run the Docker containers
+	$(DOCKER_COMPOSE) up --build
+
+stop: ## Stop the Docker containers
+	$(DOCKER_COMPOSE) down
+
+clean: ## Clean up Docker containers, networks, and volumes
+	$(DOCKER_COMPOSE) down -v
+
+test: ## Run unit tests using Maven
+	$(MVN) test
+```
+## Usage
+- Build the Application:
+
+```sh
+make build
+```
+
+- Run the Application:
+
+```sh
+make run
+```
+
+- Stop the Application:
+
+```sh
+make stop
+```
+
+- Clean up Docker resources:
+
+```sh
+make clean
+```
+
+- Run Unit Tests:
+
+```sh
+make test
+```
+
+
+### 7.Unit Testing
 
 Unit tests are provided for the service and controller layers using JUnit and Mockito. To run the tests, use the following Maven command:
 
@@ -122,11 +195,11 @@ Unit tests are provided for the service and controller layers using JUnit and Mo
 ./mvnw test
 ```
 
-### 7.Logging
+### 8.Logging
 
 Logging is configured using SLF4J with Logback. Logs are output to both the console and a log file located at `logs/app.log`.
 
-### 8.Contact
+### 9.Contact
 
 For any questions or issues, please contact:
 
