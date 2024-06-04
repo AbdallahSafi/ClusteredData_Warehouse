@@ -34,18 +34,12 @@ public class DealController {
                     .collect(Collectors.joining(", "));
             logger.error("Validation errors: {}", errors);
             ApiResponse<DealDTO> response = new ApiResponse<>(false, errors, null);
-            return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+            return ResponseEntity.badRequest().body(response);
         }
 
-        try {
-            DealDTO savedDealDTO = dealService.saveDeal(dealDTO);
-            logger.info("Deal created successfully with ID: {}", savedDealDTO.getDealUniqueId());
-            ApiResponse<DealDTO> response = new ApiResponse<>(true, "Deal created successfully", savedDealDTO);
-            return new ResponseEntity<>(response, HttpStatus.CREATED);
-        } catch (DuplicateDealException e) {
-            logger.warn("Duplicate deal exception: {}", e.getMessage());
-            ApiResponse<DealDTO> response = new ApiResponse<>(false, e.getMessage(), null);
-            return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
-        }
+        DealDTO savedDealDTO = dealService.saveDeal(dealDTO);
+        logger.info("Deal created successfully with ID: {}", savedDealDTO.getDealUniqueId());
+        ApiResponse<DealDTO> response = new ApiResponse<>(true, "Deal created successfully", savedDealDTO);
+        return ResponseEntity.status(201).body(response);
     }
 }

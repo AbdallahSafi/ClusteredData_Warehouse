@@ -22,6 +22,7 @@ import java.util.Optional;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
+
 @ExtendWith(MockitoExtension.class)
 public class DealServiceTest {
 
@@ -74,6 +75,27 @@ public class DealServiceTest {
 
         assertThrows(DuplicateDealException.class, () -> {
             dealService.saveDeal(dealDTO);
+        });
+
+        verify(dealRepository, never()).save(any(Deal.class));
+    }
+
+    @Test
+    void testSaveDeal_MapperError() {
+        when(dealRepository.existsById(dealDTO.getDealUniqueId())).thenReturn(false);
+        when(dealMapper.toEntity(dealDTO)).thenThrow(new RuntimeException("Mapper error"));
+
+        assertThrows(RuntimeException.class, () -> {
+            dealService.saveDeal(dealDTO);
+        });
+
+        verify(dealRepository, never()).save(any(Deal.class));
+    }
+
+    @Test
+    void testSaveDeal_NullDealDTO() {
+        assertThrows(NullPointerException.class, () -> {
+            dealService.saveDeal(null);
         });
 
         verify(dealRepository, never()).save(any(Deal.class));
