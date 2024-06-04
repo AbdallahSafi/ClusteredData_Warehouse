@@ -69,9 +69,10 @@ Once Docker Compose has started the services, you can verify that your applicati
 
 http://localhost:8080
 
-## Project Structure
+### 5.Project Structure
 
-/your-project-root
+```
+/warehouse
 │
 ├── src
 │   ├── main
@@ -110,21 +111,22 @@ http://localhost:8080
 ├── docker-compose.yml
 ├── pom.xml
 └── README.md
+```
 
 
-## Unit Testing
+### 6.Unit Testing
 
 Unit tests are provided for the service and controller layers using JUnit and Mockito. To run the tests, use the following Maven command:
 
-\```sh
+```sh
 ./mvnw test
-\```
+```
 
-## Logging
+### 7.Logging
 
 Logging is configured using SLF4J with Logback. Logs are output to both the console and a log file located at `logs/app.log`.
 
-## Contact
+### 8.Contact
 
 For any questions or issues, please contact:
 
