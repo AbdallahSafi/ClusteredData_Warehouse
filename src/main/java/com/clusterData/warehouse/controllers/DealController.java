@@ -1,8 +1,8 @@
 package com.clusterData.warehouse.controllers;
 
+import com.clusterData.warehouse.dtos.ApiResponse;
 import com.clusterData.warehouse.dtos.DealDTO;
 import com.clusterData.warehouse.exceptions.DuplicateDealException;
-import com.clusterData.warehouse.models.Deal;
 import com.clusterData.warehouse.services.DealService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,6 +15,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.stream.Collectors;
+
 @RestController
 @RequestMapping("/api/deals")
 public class DealController {
@@ -24,18 +27,25 @@ public class DealController {
     private DealService dealService;
 
     @PostMapping
-    public ResponseEntity<?> createDeal(@Valid @RequestBody DealDTO dealDTO, BindingResult bindingResult) {
+    public ResponseEntity<ApiResponse<DealDTO>> createDeal(@Valid @RequestBody DealDTO dealDTO, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
-            logger.error("Validation errors: {}", bindingResult.getAllErrors());
-            return new ResponseEntity<>(bindingResult.getAllErrors(), HttpStatus.BAD_REQUEST);
+            String errors = bindingResult.getAllErrors().stream()
+                    .map(error -> error.getDefaultMessage())
+                    .collect(Collectors.joining(", "));
+            logger.error("Validation errors: {}", errors);
+            ApiResponse<DealDTO> response = new ApiResponse<>(false, errors, null);
+            return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
         }
+
         try {
             DealDTO savedDealDTO = dealService.saveDeal(dealDTO);
             logger.info("Deal created successfully with ID: {}", savedDealDTO.getDealUniqueId());
-            return new ResponseEntity<>(savedDealDTO, HttpStatus.CREATED);
+            ApiResponse<DealDTO> response = new ApiResponse<>(true, "Deal created successfully", savedDealDTO);
+            return new ResponseEntity<>(response, HttpStatus.CREATED);
         } catch (DuplicateDealException e) {
             logger.warn("Duplicate deal exception: {}", e.getMessage());
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+            ApiResponse<DealDTO> response = new ApiResponse<>(false, e.getMessage(), null);
+            return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
         }
     }
 }
