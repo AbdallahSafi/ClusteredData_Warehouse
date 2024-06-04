@@ -2,6 +2,7 @@ package com.clusterData.warehouse.controller;
 
 
 import com.clusterData.warehouse.controllers.DealController;
+import com.clusterData.warehouse.dtos.ApiResponse;
 import com.clusterData.warehouse.dtos.DealDTO;
 import com.clusterData.warehouse.exceptions.DuplicateDealException;
 import com.clusterData.warehouse.services.DealService;
@@ -52,10 +53,12 @@ public class DealControllerTest {
         when(bindingResult.hasErrors()).thenReturn(false);
         when(dealService.saveDeal(dealDTO)).thenReturn(dealDTO);
 
-        ResponseEntity<?> response = dealController.createDeal(dealDTO, bindingResult);
+        ResponseEntity<ApiResponse<DealDTO>> response = dealController.createDeal(dealDTO, bindingResult);
 
         assertEquals(HttpStatus.CREATED, response.getStatusCode());
-        assertEquals(dealDTO, response.getBody());
+        assertEquals(dealDTO, response.getBody().getData());
+        assertEquals(true, response.getBody().isSuccess());
+        assertEquals("Deal created successfully", response.getBody().getMessage());
         verify(dealService, times(1)).saveDeal(dealDTO);
     }
 
@@ -65,10 +68,12 @@ public class DealControllerTest {
         when(bindingResult.hasErrors()).thenReturn(true);
         when(bindingResult.getAllErrors()).thenReturn(Collections.singletonList(fieldError));
 
-        ResponseEntity<?> response = dealController.createDeal(dealDTO, bindingResult);
+        ResponseEntity<ApiResponse<DealDTO>> response = dealController.createDeal(dealDTO, bindingResult);
 
         assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
-        assertEquals(Collections.singletonList(fieldError), response.getBody());
+        assertEquals(null, response.getBody().getData());
+        assertEquals(false, response.getBody().isSuccess());
+        assertEquals("Deal Unique Id is required", response.getBody().getMessage());
         verify(dealService, never()).saveDeal(any(DealDTO.class));
     }
 
@@ -77,10 +82,12 @@ public class DealControllerTest {
         when(bindingResult.hasErrors()).thenReturn(false);
         when(dealService.saveDeal(dealDTO)).thenThrow(new DuplicateDealException("Deal with this ID already exists"));
 
-        ResponseEntity<?> response = dealController.createDeal(dealDTO, bindingResult);
+        ResponseEntity<ApiResponse<DealDTO>> response = dealController.createDeal(dealDTO, bindingResult);
 
         assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
-        assertEquals("Deal with this ID already exists", response.getBody());
+        assertEquals(null, response.getBody().getData());
+        assertEquals(false, response.getBody().isSuccess());
+        assertEquals("Deal with this ID already exists", response.getBody().getMessage());
         verify(dealService, times(1)).saveDeal(dealDTO);
     }
 }
