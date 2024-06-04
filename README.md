@@ -304,5 +304,5 @@ Logging is configured using SLF4J with Logback. Logs are output to both the cons
 For any questions or issues, please contact:
 
 - Name: Abdallah Safi
-- Email: mr.abdallahsafi@example.com
+- Email: mr.abdallahsafi@gmail.com
 - GitHub: [AbdallahSafi](https://github.com/AbdallahSafi)
