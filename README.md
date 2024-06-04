@@ -35,26 +35,27 @@ This project is a Spring Boot application for handling warehouse deals. It inclu
 
 ### 1. Clone the Repository
 
-\```sh
+```sh
 git clone https://github.com/yourusername/ClusteredData_Warehouse.git
 cd ClusteredData_Warehouse
-\```
+```
+
 
 ### 2. Build the Application
 
 Ensure you have Maven installed and run the following command to build the application:
 
-\```sh
+```sh
 ./mvnw clean package
-\```
+```
 
 ### 3. Docker Compose
 
 Make sure Docker and Docker Compose are installed on your system. To build and start the Docker containers, run:
 
-\```sh
+```sh
 docker-compose up --build
-\```
+```
 
 This command will:
 
@@ -69,6 +70,7 @@ Once Docker Compose has started the services, you can verify that your applicati
 http://localhost:8080
 
 ## Project Structure
+
 /your-project-root
 │
 ├── src
