@@ -195,11 +195,111 @@ Unit tests are provided for the service and controller layers using JUnit and Mo
 ./mvnw test
 ```
 
-### 8.Logging
+### 9.API Documentation
+
+#### Endpoint: Create Deal
+
+- **URL:** `/api/deals`
+- **Method:** `POST`
+- **Request Body:**
+  ```json
+  {
+    "dealUniqueId": "string",
+    "fromCurrencyIsoCode": "string",
+    "toCurrencyIsoCode": "string",
+    "dealTimestamp": "string",
+    "dealAmount": "number"
+  }
+    ```
+- **dealUniqueId:** Unique identifier for the deal (string, required)
+- **fromCurrencyIsoCode:** ISO code of the ordering currency (string, required)
+- **toCurrencyIsoCode:** ISO code of the receiving currency (string, required)
+- **dealTimestamp:** Timestamp of the deal (ISO 8601 format, required)
+- **dealAmount:** Amount of the deal in ordering currency (number, required)
+
+#### Response:
+- Success Response:
+    - Status: 201 Created
+    - Body:
+```json
+{
+  "success": true,
+  "message": "Deal created successfully",
+  "data": {
+    "dealUniqueId": "string",
+    "fromCurrencyIsoCode": "string",
+    "toCurrencyIsoCode": "string",
+    "dealTimestamp": "string",
+    "dealAmount": "number"
+  }
+}
+```
+
+- Validation Error Response:
+    - Status: 400 Bad Request
+    - Body:
+```json
+{
+  "success": false,
+  "message": "Validation error message",
+  "data": null
+}
+```
+
+- Duplicate Deal Error Response:
+    - Status: 400 Bad Request
+    - Body:
+```json
+{
+  "success": false,
+  "message": "Deal with this ID already exists",
+  "data": null
+}
+```
+
+- Unexpected Error Response:
+    - Status: 500 Internal Server Error
+    - Body:
+```json
+{
+  "success": false,
+  "message": "An unexpected error occurred",
+  "data": null
+}
+```
+#### Example Usage
+- Request:
+
+```sh
+curl -X POST "http://localhost:8080/api/deals" -H "Content-Type: application/json" -d '{
+"dealUniqueId": "12345",
+"fromCurrencyIsoCode": "USD",
+"toCurrencyIsoCode": "EUR",
+"dealTimestamp": "2023-05-30T10:00:00",
+"dealAmount": 1500.00
+}'
+```
+- Response:
+
+```json
+{
+  "success": true,
+  "message": "Deal created successfully",
+  "data": {
+    "dealUniqueId": "12345",
+    "fromCurrencyIsoCode": "USD",
+    "toCurrencyIsoCode": "EUR",
+    "dealTimestamp": "2023-05-30T10:00:00",
+    "dealAmount": 1500.00
+  }
+}
+```
+
+### 9.Logging
 
 Logging is configured using SLF4J with Logback. Logs are output to both the console and a log file located at `logs/app.log`.
 
-### 9.Contact
+### 10.Contact
 
 For any questions or issues, please contact:
 
