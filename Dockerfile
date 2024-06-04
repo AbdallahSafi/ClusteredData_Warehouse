@@ -8,4 +8,4 @@ WORKDIR /app
 COPY target/warehouse-0.0.1-SNAPSHOT.jar app.jar
 
 # Run the application
-ENTRYPOINT ["java", "-jar", "/app.jar"]
+ENTRYPOINT ["java", "-jar", "app.jar"]
