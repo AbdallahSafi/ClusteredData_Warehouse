@@ -117,7 +117,7 @@ http://localhost:8080
 ### 6.Using the Makefile
 If you want to streamline running the application, you can use a Makefile.
 
-## Makefile
+#### Makefile
 The Makefile provides commands to build, run, stop, clean, and test the application.
 
 ```
@@ -155,7 +155,7 @@ clean: ## Clean up Docker containers, networks, and volumes
 test: ## Run unit tests using Maven
 	$(MVN) test
 ```
-## Usage
+#### Usage
 - Build the Application:
 
 ```sh
