@@ -6,6 +6,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
+import org.hibernate.annotations.CreationTimestamp;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -20,6 +21,7 @@ public class Deal {
     private String dealUniqueId;
     private String fromCurrencyIsoCode;
     private String toCurrencyIsoCode;
+    @CreationTimestamp
     private LocalDateTime dealTimestamp;
     private BigDecimal dealAmount;
 }
